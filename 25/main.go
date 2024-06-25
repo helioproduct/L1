@@ -12,9 +12,32 @@ func Sleep(d time.Duration) {
 	}
 }
 
+func SleepWithTimer(d time.Duration) {
+	timer := time.NewTimer(d)
+	<-timer.C
+}
+
 func main() {
+	c := make(chan bool)
+
 	start := time.Now()
-	Sleep(time.Second * 5)
+
+	go func() {
+		// time.Sleep(time.Second * 5)
+		// Sleep(time.Second * 5)
+		SleepWithTimer(time.Second * 5)
+		c <- true
+	}()
+
+	go func() {
+		// time.Sleep(time.Second * 5)
+		// Sleep(time.Second * 5)
+		SleepWithTimer(time.Second * 5)
+		c <- true
+	}()
+
+	<-c
+	<-c
 	end := time.Now()
 	fmt.Println(end.Sub(start))
 }
