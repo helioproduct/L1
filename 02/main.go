@@ -5,6 +5,8 @@ import (
 	"sync"
 )
 
+// PrintSquare принимает WaitGroup и число, вычисляет квадрат числа и выводит его на экран.
+// После завершения работы вызывает Done() для уменьшения счетчика WaitGroup.
 func PrintSquare(wg *sync.WaitGroup, number int) {
 	defer wg.Done()
 	fmt.Println(number * number)

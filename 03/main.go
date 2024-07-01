@@ -12,6 +12,7 @@ func main() {
 
 	sourceArray := []uint64{2, 4, 6, 8, 10}
 
+	// Запускаем горутину для каждого числа в массиве
 	for _, number := range sourceArray {
 		wg.Add(1)
 		go func(wg *sync.WaitGroup, delta uint64) {
@@ -19,7 +20,7 @@ func main() {
 			wg.Done()
 		}(&wg, number*number)
 	}
-	wg.Wait()
 
+	wg.Wait()
 	fmt.Println(sum.Load())
 }

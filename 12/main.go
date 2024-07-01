@@ -8,7 +8,6 @@ func (s Set) Add(key interface{}) {
 	s[key] = struct{}{}
 }
 
-// interface{} why not
 func (s Set) AddAll(sourceArray []string) {
 	for _, str := range sourceArray {
 		s.Add(str)

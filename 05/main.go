@@ -1,38 +1,50 @@
 package main
 
-import "fmt"
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
-// https://ru.hexlet.io/qna/go/questions/golang-kak-ostanovit-gorutinu#:~:text=%D0%95%D1%81%D0%BB%D0%B8%20%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%20%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B0%D0%B5%D1%82%20%D1%81%D0%B8%D0%B3%D0%BD%D0%B0%D0%BB%20%D0%BE%D0%B1,%D0%B7%D0%B0%D0%B2%D0%B5%D1%80%D1%88%D0%B5%D0%BD%D0%B8%D1%8F%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%8B%20%D0%B3%D0%BE%D1%80%D1%83%D1%82%D0%B8%D0%BD%D1%8B%2C%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B0%20%D0%B7%D0%B0%D0%B2%D0%B5%D1%80%D1%88%D0%B0%D0%B5%D1%82%D1%81%D1%8F.
-// https://metanit.com/go/tutorial/7.3.php
 func main() {
 
+	// Создаем канал для передачи строковых данных
 	channel := make(chan string)
+
+	// Создаем канал для отправки сигнала остановки
 	stop := make(chan bool)
 
+	// Первая горутина, которая отправляет данные в канал
 	go func() {
 		for {
 			select {
 			default:
+				// Отправляем строку "data" в канал
 				channel <- "data"
 			case <-stop:
+				// При получении сигнала остановки, закрываем канал и выходим из горутины
 				close(channel)
 				return
 			}
 		}
 	}()
 
+	// Вторая горутина, которая получает данные из канала
 	go func() {
 		for {
 			select {
 			default:
+				// Получаем данные из канала и выводим их
 				fmt.Println(<-channel)
 			case <-stop:
+				// При получении сигнала остановки, выходим из горутины
 				return
 			}
 		}
 	}()
 
+	// Задержка в 1 секунду
 	time.Sleep(1 * time.Second)
+
+	// Отправляем сигнал остановки
 	stop <- true
 }
